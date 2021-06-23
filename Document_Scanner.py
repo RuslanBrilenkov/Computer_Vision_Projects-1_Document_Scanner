@@ -100,7 +100,7 @@ class Scanner:
 		Resized image (array)
 		"""
 
-		print("Part 1: Scanned View")
+		print("Scanned View")
 		# read the original image, copy it,
 		# apply threshold to "scannify" it
 		image = cv2.imread(self.img)
@@ -119,14 +119,75 @@ class Scanner:
 		#cv2.destroyAllWindows()
 		print(np.shape(orig), np.shape(image))
 		if save_collage:
-			# Saving a nice horizontal collage:
+			# Saving a nice horizontal collage
 			horiz_conc = np.concatenate((orig[:,:,1], image), axis=1)
 			if resize_collage:
 				# Optional - resizing this collage to take less space
 				horiz_conc = self.Resize_Image(resize_height, horiz_conc)
 			# Saving the horizontal collage
-			cv2.imwrite('Part_1_collage.png', horiz_conc)
+			cv2.imwrite('Part_scan_view.png', horiz_conc)
+		else:
+			# Saving an image itself
+			cv2.imwrite('Part_scan_view.png', image)
 		return image
+
+	def Rotation(self, save_rotated =False, resize_height=500):
+		"""
+		Rotate an image/document view for a face-on view (view from the top).
+
+		Optionally, saves and resizes a collage with the original and scanned images.
+
+		Parameters
+		----------
+		save_collage : bool
+			flag to save the collage
+		resize_collage : bool
+			flag to resize the collage
+		resize_height : int (default = 500)
+			final height to resize an image to (in pixels)
+
+		Returns
+		-------
+		Rotated image (array)
+		"""
+
+		print("Rotation")
+		# read the original image, copy it,
+		# rotate it
+		image = cv2.imread(self.img)
+		orig = image.copy()
+		
+		image = cv2.cvtColor(orig, cv2.COLOR_BGR2GRAY)
+		img_edges = cv2.Canny(image, 100, 100, apertureSize=3)
+		lines = cv2.HoughLinesP(img_edges, rho=1, theta=np.pi / 180.0, threshold=160, minLineLength=100, maxLineGap=10)
+		
+		# calculate all the angles:
+		angles = []
+		for [[x1, y1, x2, y2]] in lines:
+			# Drawing Hough lines
+			#cv2.line(image, (x1, y1), (x2, y2), (128,0,0), 30)
+			angle = math.degrees(math.atan2(y2 - y1, x2 - x1))
+			angles.append(angle)
+			
+		# average angles
+		median_angle = np.median(angles)
+		# actual rotation
+		image = ndimage.rotate(image, median_angle)
+
+		# Resize the rotated image to the old height
+		#image = self.Resize_Image(resize_height , image)
+		#print(np.shape(image))
+		# show the original and rotated image
+		#cv2.imshow("orig", orig)
+		cv2.imshow("Rotated", image)
+		cv2.waitKey(0)
+		cv2.destroyAllWindows()
+		print(np.shape(orig), np.shape(image))
+		if save_rotated:
+			# Saving an image itself
+			cv2.imwrite('Part_rotation.png', image)
+		return image
+	
 	
 if __name__=="__main__":
 	# Defining the image name
@@ -139,10 +200,12 @@ if __name__=="__main__":
 	#scan.Resize_Image(512, img)
 	
 	# Scanning the image -> B&W scheme
-	scanned_im = scan.Scan_View(save_collage=True, resize_collage=False, resize_height =500)
+	scanned_im = scan.Scan_View(save_collage=False, resize_collage=False, resize_height =500)
 
 	# Testing my docstrings:
-	help(Scanner)
-
-	#scan.Rotation(scanned_im)
+	#help(Scanner)
+	
+	scanned_im = "Part_scan_view.png"
+	scan = Scanner(scanned_im)
+	rotated_im = scan.Rotation(save_rotated=True, resize_height=500)
 	
