@@ -25,6 +25,9 @@ class Scanner:
 	Scan_View():
 		Transforms the image/document view into B&W (proper scanned colour scheme).
 
+	Rotation():
+		Automatically rotates the image/document to a straight (top-down, face-on) view.
+
 	"""
 
 	def __init__(self, img):
@@ -131,7 +134,7 @@ class Scanner:
 			cv2.imwrite('Part_scan_view.png', image)
 		return image
 
-	def Rotation(self, save_rotated =False, resize_height=500):
+	def Rotation(self, save_rotated=False, resize_height=500):
 		"""
 		Rotate an image/document view for a face-on view (view from the top).
 
@@ -139,11 +142,9 @@ class Scanner:
 
 		Parameters
 		----------
-		save_collage : bool
-			flag to save the collage
-		resize_collage : bool
-			flag to resize the collage
-		resize_height : int (default = 500)
+		save_rotated : bool
+			flag to save the rotated image
+		resize_height : int (optional, default = 500)
 			final height to resize an image to (in pixels)
 
 		Returns
