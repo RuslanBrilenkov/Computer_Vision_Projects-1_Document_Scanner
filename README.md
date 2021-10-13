@@ -12,6 +12,8 @@ In my view, a document scanner should perform two operations on the document (in
 I am building the routine that does exactly these two operations.
 
 To learn more about this class and about its methods, run the following command:
->> help(Scanner)
+'''
+help(Scanner)
+'''
 
 If you have any comments, questions, suggestions, or just want to connect, my LinkedIn is http://bit.ly/RBrilenkov
