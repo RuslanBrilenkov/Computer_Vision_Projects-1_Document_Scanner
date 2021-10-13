@@ -1,4 +1,8 @@
 # Computer Vision Project 1: Document Scanner
+
+## Author: [Ruslan Brilenkov](https://www.linkedin.com/in/ruslan-brilenkov/)
+## [Original article](https://medium.datadriveninvestor.com/document-scanner-from-scratch-with-python-6a55c7ce1423)
+
 This repository is dedicated to a real-life computer vision application with OpenCV. Precisely, building a Python application for document scanning using a series of morphological transformations.
 
 In my view, a document scanner should perform two operations on the document (input image):
